@@ -1,0 +1,211 @@
+/* Estilos de la página de inicio */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0f0f2e 100%);
+    color: #e0e0e0;
+    font-family: 'system-ui', -apple-system, sans-serif;
+}
+
+/* Canvas para las estrellas en forma de cerebro */
+#starCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.hero-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.button-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+/* Efecto de estela/galaxia alrededor del botón */
+.glow-ring {
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 0deg,
+        #ff1493,
+        #da70d6,
+        #ba55d3,
+        #9370db,
+        #da70d6,
+        #ff1493
+    );
+    opacity: 0.6;
+    animation: rotateRing 4s linear infinite;
+    filter: blur(15px);
+    z-index: -1;
+}
+
+@keyframes rotateRing {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.start-button {
+    position: relative;
+    padding: 16px 48px;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+    z-index: 1;
+}
+
+.start-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 50px rgba(139, 92, 246, 0.8);
+}
+
+.start-button:active {
+    transform: scale(0.98);
+}
+
+/* Animación de desvanecimiento */
+@keyframes fadeOutAndZoom {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+}
+
+.button-fade-out {
+    animation: fadeOutAndZoom 0.8s ease-out forwards;
+}
+
+/* Indicador de scroll */
+.scroll-indicator {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-10px);
+    }
+}
+
+.scroll-indicator svg {
+    width: 24px;
+    height: 24px;
+    stroke: #8b5cf6;
+    stroke-width: 2;
+    fill: none;
+}
+
+/* Info section - scrolleable */
+.info-section {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    padding: 80px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(10, 14, 39, 0.9) 0%, rgba(26, 26, 62, 0.95) 100%);
+}
+
+.info-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.info-content h2 {
+    font-size: 36px;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #6366f1, #da70d6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.info-content p {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    color: #b0b0c0;
+}
+
+.feature-list {
+    list-style: none;
+    margin: 32px 0;
+}
+
+.feature-list li {
+    padding: 12px 0;
+    padding-left: 32px;
+    position: relative;
+    font-size: 16px;
+    color: #b0b0c0;
+}
+
+.feature-list li:before {
+    content: "✨";
+    position: absolute;
+    left: 0;
+    color: #da70d6;
+}
+
+@media (max-width: 768px) {
+    .start-button {
+        padding: 12px 32px;
+        font-size: 18px;
+    }
+
+    .info-content h2 {
+        font-size: 28px;
+    }
+
+    .info-section {
+        padding: 60px 24px;
+    }
+}

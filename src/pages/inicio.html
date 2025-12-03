@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconocimiento de Emociones - AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./inicio.css">
+</head>
+<body>
+    <!-- Canvas para las estrellas -->
+    <canvas id="starCanvas"></canvas>
+
+    <!-- Hero Section -->
+    <div class="hero-container">
+        <div class="button-wrapper">
+            <div class="glow-ring"></div>
+            <button class="start-button" id="startBtn">INICIAR</button>
+        </div>
+
+        <!-- Indicador de scroll -->
+        <div class="scroll-indicator">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12l7 7 7-7"></path>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="info-section">
+        <div class="info-content">
+            <h2>🧠 Reconocimiento de Emociones con IA</h2>
+            <p>
+                Bienvenido a nuestra plataforma revolucionaria de reconocimiento de emociones. 
+                Utiliza inteligencia artificial avanzada para analizar y clasificar emociones 
+                a partir de imágenes.
+            </p>
+            
+            <h3 style="font-size: 20px; margin-top: 32px; margin-bottom: 16px; color: #da70d6;">
+                ¿Qué puedes hacer?
+            </h3>
+            <ul class="feature-list">
+                <li>Dibuja o carga una imagen para análisis inmediato</li>
+                <li>Obtén resultados precisos de emociones en tiempo real</li>
+                <li>Visualiza métricas detalladas de exactitud y confianza</li>
+                <li>Explora la matriz de confusión del modelo</li>
+                <li>Tecnología de deep learning con redes neuronales</li>
+            </ul>
+
+            <p style="margin-top: 32px; font-style: italic;">
+                Nuestro modelo ha sido entrenado con miles de imágenes para reconocer con precisión 
+                tres emociones principales: <strong style="color: #6366f1;">Felicidad</strong>, 
+                <strong style="color: #da70d6;">Tristeza</strong> y 
+                <strong style="color: #ff6b6b;">Enojo</strong>.
+            </p>
+        </div>
+    </div>
+
+    <script src="./inicio.js"></script>
+</body>
+</html>
