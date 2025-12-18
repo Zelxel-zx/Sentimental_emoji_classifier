@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconocimiento de Sentimientos</title>
+    <script src="/_sdk/element_sdk.js"></script>
+    <script src="/_sdk/data_sdk.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@4.10.0"></script>
+    <link rel="stylesheet" href="./index.css">
+    <style>@view-transition { navigation: auto; }</style>
+</head>
+ <body class="w-full min-h-full">
+  <div class="w-full h-full flex flex-col p-6" id="app-container"><!-- Header -->
+   <header class="mb-8 text-center">
+    <h1 class="text-3xl font-bold mb-1" id="main-title">Reconocimiento de emociones</h1>
+   </header><!-- Main Layout -->
+   <div class="flex-1 flex flex-col items-center justify-center gap-8 overflow-hidden"><!-- Center Container -->
+    <div class="flex gap-8 w-full justify-center" style="max-width: 900px; margin: 0 auto;">
+     <!-- Left Column: Input -->
+     <div class="section-card p-6 flex flex-col items-center" style="width: 360px; flex-shrink: 0; border-radius: 20px;">
+      <h2 class="text-lg font-semibold mb-4" id="draw-section-title">Dibuja tu Emoción</h2>
+      <div style="position: relative; width: 320px; height: 320px; margin-bottom: 16px;">
+       <canvas id="drawingCanvas" class="canvas-container" width="320" height="320" style="border-radius: 16px; background-color: #1a1a2e; position: absolute; top: 0; left: 0;"></canvas>
+       <div id="previewContainer" class="hidden" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 16px; overflow: hidden; background: #1a1a2e;">
+        <img id="imagePreview" style="width: 100%; height: 100%; object-fit: contain;" alt="Vista previa">
+       </div>
+      </div>
+      <div class="flex gap-2 w-full"><button id="analyzeBtn" class="flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-lg">Analizar</button> <button id="clearBtn" class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-lg">Limpiar</button> <input type="file" id="fileInput" accept="image/*" class="hidden"> <button id="uploadBtn" class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-lg">📁</button>
+      </div>
+     </div>
+     <!-- Right Column: Results -->
+     <div class="flex flex-col gap-6" style="width: 400px; flex-shrink: 0;">
+      <!-- Resultados -->
+      <div class="section-card p-5 flex flex-col rounded-xl" style="border-radius: 20px;">
+       <h3 class="text-lg font-semibold mb-4 text-center" id="results-section-title">Resultados</h3>
+       <div class="space-y-3">
+        <div>
+         <div class="flex justify-between mb-2 text-base"><span>😊 Feliz</span> <span class="font-bold" id="happy-percent">0%</span>
+         </div>
+         <div class="w-full h-2.5 rounded-full" style="background-color: rgba(139, 92, 246, 0.15);">
+          <div id="happy-bar" class="emotion-bar h-2.5 rounded-full" style="width: 0%; background: linear-gradient(90deg, #4ecdc4, #45b7d1);"></div>
+         </div>
+        </div>
+        <div>
+         <div class="flex justify-between mb-2 text-base"><span>😢 Triste</span> <span class="font-bold" id="sad-percent">0%</span>
+         </div>
+         <div class="w-full h-2.5 rounded-full" style="background-color: rgba(139, 92, 246, 0.15);">
+          <div id="sad-bar" class="emotion-bar h-2.5 rounded-full" style="width: 0%; background: linear-gradient(90deg, #a8edea, #fed6e3);"></div>
+         </div>
+        </div>
+        <div>
+         <div class="flex justify-between mb-2 text-base"><span>😠 Enojado</span> <span class="font-bold" id="angry-percent">0%</span>
+         </div>
+         <div class="w-full h-2.5 rounded-full" style="background-color: rgba(139, 92, 246, 0.15);">
+          <div id="angry-bar" class="emotion-bar h-2.5 rounded-full" style="width: 0%; background: linear-gradient(90deg, #ff6b6b, #ff8e53);"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+      <!-- Métricas -->
+      <div class="section-card p-5 flex flex-col rounded-xl" style="border-radius: 20px;">
+       <h3 class="text-lg font-semibold mb-3 text-center" id="model-metrics-title">Métricas del Modelo</h3>
+       <div class="grid grid-cols-2 gap-2" id="metrics-container">
+        <div class="p-2.5 rounded-lg text-center" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1)); border-radius: 10px;">
+         <div class="text-sm opacity-60 mb-0.5">Accuracy</div>
+         <div class="text-lg font-bold" id="accuracy-value">Cargando...</div>
+        </div>
+        <div class="p-2.5 rounded-lg text-center" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.1)); border-radius: 10px;">
+         <div class="text-sm opacity-60 mb-0.5">Precision</div>
+         <div class="text-lg font-bold" id="precision-value">Cargando...</div>
+        </div>
+        <div class="p-2.5 rounded-lg text-center" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1)); border-radius: 10px;">
+         <div class="text-sm opacity-60 mb-0.5">Recall</div>
+         <div class="text-lg font-bold" id="recall-value">Cargando...</div>
+        </div>
+        <div class="p-2.5 rounded-lg text-center" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.1)); border-radius: 10px;">
+         <div class="text-sm opacity-60 mb-0.5">F1-Score</div>
+         <div class="text-lg font-bold" id="f1-value">Cargando...</div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <!-- Matriz de Confusión -->
+   <div class="section-card p-6 rounded-xl mx-auto mt-6" style="border-radius: 20px; max-width: 900px;">
+    <h3 class="text-lg font-semibold mb-4 text-center">Matriz de Confusión</h3>
+    <div class="flex flex-col gap-2.5" id="confusion-matrix-container">
+     <div class="flex gap-4 items-center">
+      <div class="text-xs w-12 text-right opacity-60"></div>
+      <div class="flex-1 grid grid-cols-3 gap-4 text-center text-base opacity-60 font-medium">
+       <div>😠</div>
+       <div>😊</div>
+       <div>😢</div>
+      </div>
+     </div>
+     <div id="confusion-rows">Cargando matriz...</div>
+    </div>
+   </div>
+  </div>
+  <script>
+        window.defaultConfig = {
+            background_color: "#000000",
+            surface_color: "#000000",
+            text_color: "#e0e0e0",
+            primary_action_color: "#6366f1",
+            secondary_action_color: "#8b5cf6",
+            main_title: "Reconocimiento de emociones",
+            draw_section_title: "Dibuja tu Emoción",
+            results_section_title: "Resultados del Análisis",
+            analyze_button_text: "Analizar",
+            clear_button_text: "Limpiar",
+            upload_button_text: "📁",
+            font_family: "system-ui",
+            font_size: 16
+        };
+    </script>
+    <script src="./index.js"></script>
+    <script src="../config/app.js"></script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a7f3c407611c2bd',t:'MTc2NDcyNDc2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

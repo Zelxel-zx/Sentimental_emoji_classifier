@@ -1,0 +1,52 @@
+/* Estilos de la página principal de análisis */
+body {
+    box-sizing: border-box;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.canvas-container {
+    border: 2px solid #8b5cf6;
+    border-radius: 24px;
+    cursor: crosshair;
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.2);
+}
+
+.emotion-bar {
+    transition: width 0.5s ease-out;
+    box-shadow: 0 0 6px currentColor;
+}
+
+.section-card {
+    border: 1px solid #4a4a6e;
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.15);
+}
+
+button {
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
+}
+
+button:hover {
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+}
+
+h1 {
+    text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+
+.history-item {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.history-item:hover {
+    transform: translateX(4px);
+}
